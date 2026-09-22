@@ -1,11 +1,21 @@
 #!/bin/sh
 
-npm run test
+# Runs the test suite before each commit so scores/scores.json is up to date.
+#
+# Note there is no `set -e` here, and that is deliberate: a failing test must
+# NOT block your commit. You are expected to commit work in progress.
+
+if [ -x ".venv/bin/python" ]; then
+  .venv/bin/python -m pytest
+else
+  python3 -m pytest
+fi
 
 git add scores/scores.json
 
+exit 0
+
 # What's this file?
-# It's called a "git hook" and it "hooks" into certain git actions
-# In this case, it's a pre-commit hook, which runs before you commit
-# And we're using it to run the test command, which will ensure the test suite
-# scores have been calculated
+# It's called a "git hook" and it "hooks" into certain git actions.
+# This is a pre-commit hook, so it runs just before a commit is created.
+# We use it to run the tests, which recalculates your scores file.
