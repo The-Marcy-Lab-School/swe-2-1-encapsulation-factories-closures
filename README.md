@@ -4,8 +4,8 @@ Write factory functions that keep their data private, using closures.
 
 **Practicing:** closures, factory functions, encapsulation
 
-> **Short responses have moved** to
-> [swe-2-1-encapsulation-factories-closures-sr](https://github.com/The-Marcy-Lab-School/swe-2-1-encapsulation-factories-closures-sr).
+> **The short responses for this assignment are in
+> [swe-2-1-encapsulation-factories-closures-sr](https://github.com/The-Marcy-Lab-School/swe-2-1-encapsulation-factories-closures-sr).**
 > Both repos are part of this assignment.
 
 - [AI Use on This Assignment](#ai-use-on-this-assignment)
@@ -60,8 +60,8 @@ pip install -r requirements.txt
 git checkout -b draft
 ```
 
-Run `pytest` for everything, or `pytest -k make_id_func` for one group.
-Scores land in `scores/scores.json`.
+Run `pytest` for everything, or `pytest -k MakeIdFunc` for one question's
+tests. Scores land in `scores/scores.json`.
 
 75% of tests passing counts as complete. Submit at that point even if it is
 not perfect. Treat submitting as a checkpoint rather than a finish line, and
@@ -76,13 +76,27 @@ Write your solutions in `src/from_scratch.py`.
 
 ### Question 1: `make_id_func`
 
-Return a function that counts up from 1 each time it is called. Each call to
-`make_id_func` starts its own count.
+Write a higher-order function that returns an inner function with a closure.
+The returned inner function should:
+
+- Return `1` the first time it is called
+- Return `2` the second time it is called
+- Return `3` the third time it is called
+- And so on
+
+Each call to `make_id_func` starts its own count. This kind of function is how
+you generate unique number IDs for things.
 
 ```python
-get_id = make_id_func()
-get_id()   # 1
-get_id()   # 2
+id_maker1 = make_id_func()
+id_maker2 = make_id_func()
+
+print(id_maker1())   # 1
+print(id_maker1())   # 2
+print(id_maker1())   # 3
+
+print(id_maker2())   # 1
+print(id_maker2())   # 2
 ```
 
 Look up `nonlocal`. Without it Python quietly makes a brand new local
@@ -91,11 +105,14 @@ five minutes to debug, so save yourself the five minutes.
 
 ### Question 2: `make_password_checker`
 
-Return a function that checks a guess against `correct_password` and counts
-failures.
+Write a higher-order function that takes a `correct_password` and returns an
+inner function with a closure. The returned function should:
 
-**Returns** `True` on a match, `False` on a wrong guess, and the string
-`"Account locked"` once three guesses have failed.
+- Take a `guess` as an argument
+- Keep track of how many attempts have been made
+- Return `True` if the guess matches the correct password
+- Return `False` if the guess is wrong
+- Return the string `"Account locked"` after 3 failed attempts
 
 ```python
 check = make_password_checker("secret123")
@@ -110,27 +127,45 @@ locked. That is the whole point of locking it.
 
 ### Question 3: `make_multiplier`
 
-Return a function that takes a list of numbers and returns a new list with
-each one multiplied by `multiplier`.
+Write a function that takes a number called `multiplier` and returns a
+function. The returned function should:
+
+- Take a list of numbers as an argument
+- Return a new list with each number multiplied by `multiplier`
+- Use a comprehension or `map()`, not a `for` loop
 
 ```python
 double = make_multiplier(2)
+triple = make_multiplier(3)
+
 double([1, 2, 3, 4])   # [2, 4, 6, 8]
+triple([1, 2, 3, 4])   # [3, 6, 9, 12]
 ```
 
 ### Question 4: `make_filter_by_length`
 
-Return a function that takes a list of strings and returns only those no
-longer than `length`.
+Write a function that takes a number called `max_length` and returns a
+function. The returned function should:
+
+- Take a list of strings as an argument
+- Return a new list of only the strings whose length is *less than or equal
+  to* `max_length`
+- Use a comprehension or `filter()`, not a `for` loop
 
 ```python
-shorter_than_5 = make_filter_by_length(5)
-shorter_than_5(["apple", "banana", "date"])   # ["apple", "date"]
+shorter_than_4 = make_filter_by_length(4)
+animals = ["cat", "dog", "elephant", "bird", "llama"]
+
+shorter_than_4(animals)   # ['cat', 'dog', 'bird']
 ```
 
 ### Question 5: `make_grade_tracker`
 
-Return an object that tracks grades. The grades list stays private.
+Write a factory function that returns an object for tracking student grades.
+
+- Use a closure to keep a private `grades` list. You should **not** be able to
+  reach `grades` from outside
+- The returned object has methods that act on that list
 
 Questions 5 and 6 return objects with methods. Build them with
 `SimpleNamespace`, already imported for you:
@@ -155,7 +190,10 @@ The object exposes these two methods and nothing else.
 
 ### Question 6: `make_shopping_list`
 
-Return an object holding a private list of items.
+Write a factory function that returns an object for managing a shopping list.
+
+- Use a closure to keep a private `items` list of grocery items
+- The returned object has methods that act on that list
 
 | Method | Does | Returns |
 | --- | --- | --- |
