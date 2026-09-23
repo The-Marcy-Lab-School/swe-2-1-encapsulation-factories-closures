@@ -28,6 +28,9 @@ produces the name "From Scratch Tests make_id_func starts on 1".
 Docstrings are optional. Without one, the name is derived from the function
 name (`test_starts_at_one` -> "starts at one").
 
+A test module can set `SCORED = False` at module level to be left out of
+scores.json entirely. Bonus questions use this.
+
 HOW IDS STAY STABLE
 -------------------
 Each suite gets a prefix from the first two letters of each word in its name
@@ -220,6 +223,12 @@ class ScoreTestsPlugin:
 
     def pytest_collection_modifyitems(self, session, config, items):
         for item in items:
+            # A test module can opt out of scoring with `SCORED = False`.
+            # Bonus questions use this: they are worth doing but must not
+            # drag the score down, matching the JS "No Scores" bonus suite.
+            module = getattr(item, "module", None)
+            if getattr(module, "SCORED", True) is False:
+                continue
             suite, name = build_test_name(item)
             self.counter.register(item.nodeid, suite, name)
 
