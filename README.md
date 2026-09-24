@@ -99,9 +99,10 @@ print(id_maker2())   # 1
 print(id_maker2())   # 2
 ```
 
-Look up `nonlocal`. Without it Python quietly makes a brand new local
-variable, and your counter is stuck on 1 forever. That is a deeply annoying
-five minutes to debug, so save yourself the five minutes.
+You need [`nonlocal`](https://www.w3schools.com/python/python_scope.asp).
+Without it Python quietly makes a brand new local variable, and your counter
+is stuck on 1 forever. That is a deeply annoying five minutes to debug, so
+save yourself the five minutes.
 
 ### Question 2: `make_password_checker`
 
